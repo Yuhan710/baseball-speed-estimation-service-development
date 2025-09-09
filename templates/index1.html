@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Home</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12 text-center">
+          <h1 class="mt-4">Hello,  {% print(user_name) %}! </h1>
+          <p>You're logged in!</p>
+          <p>Email: {% print(user_email) %}</p>
+          <div>
+            <p>Google Profile Picture:</p>
+            <img class="rounded-circle" alt="Google profile pic" style="width: 200px; height: 200px;"
+                             src="{% print(user_profile_pic) %}"></img>
+          </div>
+
+          <h1 class="center">影片上傳</h1>
+          <form method="post" action="{{ url_for('upload_file') }}" enctype="multipart/form-data">
+          <!-- <form method="post" enctype="multipart/form-data"> -->
+            <label class="botton" id="uploadLabel">選擇檔案<input style="display:none" type="file" name="video" id="fileInput"></label>
+            <div id="upload_zone" class="upload_zone">
+              請將要上傳的圖片拖曳至此
+            </div>
+            <div id="fileDisplayArea"></div>
+            <br>
+            <input type="submit" value="上傳" >
+          </form>
+          <a class="btn btn-primary mt-4" href="/logout">Logout</a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

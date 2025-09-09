@@ -1,0 +1,5 @@
+file/
+runs/
+*.onnx
+*.pt
+app.py

@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% block title%} {{ title }} {% endblock %}
+{% block content%}
+
+<div class="container py-4 text-center">
+  {% if current_user.is_authenticated %}
+  <!-- <h1>Welcome {{ current_user.username }}</h1> -->
+  <h1>Hello, {% print(user_name) %}! </h1>
+  <div id="choice">
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item"><button class="page-link" id="btn1">已上傳列表</li>
+        <li class="page-item"><button class="page-link" id="btn2">檔案上傳</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div id="section1">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th scope="col">原始影片 </th>
+          <th scope="col">上傳時間 </th>
+          <th scope="col">下載連結 </th>
+          <th scope="col">轉速 </th>
+          <!-- <th scope="col"><a href="/file/upload_video/0001.png" download="a.png"> a </a></th>        -->
+        </tr>
+      </thead>
+      <tbody>
+        {% for video in videos %}
+        <tr>
+
+          <td><a href="{{ url_for('download', filename = video[1]) }}">{{video[0]}}</a></td>
+          <td>{{ video[2] }}</td>
+          <!-- <td>{{ video[1] }}</td> -->
+          {% if video[3] %}
+          <td><a href="{{ url_for('download', filename = video[3]) }}">下載</a></td>
+          {% else %}
+          <script>
+            requestData();
+            requestData();
+            setInterval(requestData, 60000);
+          </script>
+          <td>處理中</td>
+          {% endif %}
+          {% if video[4] %}
+          <td>{{ video[4] }}</td>
+          {% else %}
+          <script>
+            requestData();
+            requestData();
+            setInterval(requestData, 60000);
+          </script>
+          <td>.</td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div id="section2" style="display:none;">
+    <h1 class="center">影片上傳</h1>
+    <form method="post" action="{{ url_for('upload_file') }}" enctype="multipart/form-data">
+      <!-- <form method="post" enctype="multipart/form-data"> -->
+      <labal class="choice" id="choosefps">請選擇fps:
+        <select class="choice" id="choice" name="fps">
+          <option value="240">240fps</option>
+          <option value="480">480fps</option>
+          <option value="960">960fps</option>
+        </select>
+      </labal>
+      <label class="bUtton" id="uploadLabel">選擇檔案
+        <input style="display:none" type="file" name="video" id="fileInput">
+      </label>
+      <div id="upload_zone" class="upload_zone">
+        請將要上傳的影片拖曳至此
+      </div>
+      <div id="fileDisplayArea"></div>
+      <br>
+      <input type="submit" value="上傳">
+    </form>
+    <a href="{{url_for('logout')}}">Logout</a>
+  </div>
+  {% else %}
+  <div>
+    <a href="{{url_for('login')}}">Sign in/Sign Up</a>
+  </div>
+  {% endif %}
+
+</div>
+<script>
+  const dropbox = document.getElementById("upload_zone");
+  const uploadLabel = document.getElementById("uploadLabel");
+  const fileDisplayArea = document.getElementById("fileDisplayArea");
+
+  function handleFileSelect(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    const fileUploader = document.getElementById("fileInput");
+    fileUploader.files = e.dataTransfer.files;
+    updateDisplay();
+  }
+
+  // prevent the default method working
+  function dragenter(e) {
+    // add the styling to div
+    dropbox.classList.add("upload_zone_enter");
+    e.stopPropagation();
+    e.preventDefault();
+  }
+
+  // remove the styling from div
+  const dragleave = () => dropbox.classList.remove("upload_zone_enter");
+
+  // prevent the default method working
+  function dragover(e) {
+    e.stopPropagation();
+    e.preventDefault();
+  }
+
+  function updateDisplay() {
+    const files = document.getElementById("fileInput").files;
+    fileDisplayArea.innerHTML = "";
+    for (var i = 0; i < files.length; i++) {
+      const file = files[i];
+      fileDisplayArea.innerHTML += file.name + "<br>";
+    }
+  }
+
+  function drop(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    const dt = e.dataTransfer;
+    const files = dt.files;
+    const fileUploader = document.getElementById("fileInput");
+    fileUploader.files = files;
+    updateDisplay();
+    dropbox.classList.remove("upload_zone_enter");
+  }
+
+  dropbox.addEventListener("dragenter", dragenter, false);
+  dropbox.addEventListener("dragleave", dragleave, false);
+  dropbox.addEventListener("dragover", dragover, false);
+  dropbox.addEventListener("drop", drop, false);
+  // uploadLabel.addEventListener("click", () => document.getElementById("fileInput").click());
+  document.getElementById("fileInput").addEventListener("change", updateDisplay);
+</script>
+
+<script>
+
+  const btn1 = document.getElementById('btn1');
+  const btn2 = document.getElementById('btn2');
+  const section1 = document.getElementById('section1');
+  const section2 = document.getElementById('section2');
+
+  btn1.addEventListener('click', function () {
+    // 顯示區域1，隱藏區域2
+    section1.style.display = 'block';
+    section2.style.display = 'none';
+  });
+
+  btn2.addEventListener('click', function () {
+    // 顯示區域2，隱藏區域1
+    section2.style.display = 'block';
+    section1.style.display = 'none';
+  });
+</script>
+<script>
+
+  function requestData() {
+
+  }
+
+</script>
+{% endblock %}
